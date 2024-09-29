@@ -9,5 +9,4 @@ class HhplusWeek2ApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
