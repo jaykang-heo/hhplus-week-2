@@ -15,14 +15,24 @@ data class LectureEntity(
     val id: Long,
     val title: String,
     val teacherId: Long,
-    val dateUtc: Instant
+    val dateUtc: Instant,
+    var registeredCount: Int
 ) {
     fun toModel(teacher: Teacher): Lecture {
         return Lecture(
             id,
             title,
             teacher,
-            dateUtc
+            dateUtc,
+            registeredCount
         )
     }
+
+    constructor(lecture: Lecture) : this(
+        lecture.id,
+        lecture.title,
+        lecture.teacher.id,
+        lecture.dateUtc,
+        lecture.registeredCount
+    )
 }

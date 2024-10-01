@@ -1,5 +1,6 @@
 package com.example.hhplusweek2.domain
 
+import com.example.hhplusweek2.domain.EnrollUserLectureCommandValidatorService.Companion.MAXIMUM_ENROLL_COUNT
 import com.example.hhplusweek2.domain.command.EnrollUserLectureCommand
 import com.example.hhplusweek2.domain.`interface`.LectureEnrollmentRepository
 import com.example.hhplusweek2.domain.`interface`.LectureRepository
@@ -14,9 +15,11 @@ class LectureEnrollmentService(
     private val lectureEnrollmentRepository: LectureEnrollmentRepository,
     private val lectureRepository: LectureRepository
 ) {
-
     fun enroll(command: EnrollUserLectureCommand) {
+        val lecture = lectureRepository.getById(command.lectureId)
+        lecture.increaseRegisterCount()
         lectureEnrollmentRepository.save(command)
+        lectureRepository.save(lecture)
     }
 
     fun list(query: ListUserLectureQuery): List<Lecture> {
@@ -31,9 +34,5 @@ class LectureEnrollmentService(
             val userEnrolled = totalEnrolled.any { it.userId == query.userId }
             !userEnrolled && totalEnrolled.size < MAXIMUM_ENROLL_COUNT
         }
-    }
-
-    companion object {
-        private const val MAXIMUM_ENROLL_COUNT = 30
     }
 }

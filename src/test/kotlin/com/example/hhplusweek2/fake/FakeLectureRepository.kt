@@ -5,6 +5,13 @@ import com.example.hhplusweek2.domain.model.Lecture
 import java.time.Instant
 
 class FakeLectureRepository : LectureRepository {
+    override fun save(lecture: Lecture) {
+    }
+
+    override fun getById(lectureId: Long): Lecture {
+        TODO()
+    }
+
     override fun findById(lectureId: Long): Lecture? {
         return null
     }

@@ -6,5 +6,10 @@ data class Lecture(
     val id: Long,
     val title: String,
     val teacher: Teacher,
-    val dateUtc: Instant
-)
+    val dateUtc: Instant,
+    var registeredCount: Int
+) {
+    fun increaseRegisterCount() {
+        registeredCount += 1
+    }
+}

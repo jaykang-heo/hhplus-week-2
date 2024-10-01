@@ -3,8 +3,8 @@ package com.example.hhplusweek2.repository
 import com.example.hhplusweek2.domain.`interface`.LectureRepository
 import com.example.hhplusweek2.repository.jpa.LectureJpaRepository
 import com.example.hhplusweek2.repository.jpa.TeacherJpaRepository
-import com.example.hhplusweek2.repository.model.LectureEntity
 import com.example.hhplusweek2.repository.model.TeacherEntity
+import com.example.hhplusweek2.stub.StubObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class LectureRepositoryImplIntegrationTest(
 ) {
 
     @Test
-    @DisplayName("When lecture does not exist, then return null")
+    @DisplayName("특강이 존재하지 않으면, null을 반환한다")
     fun `findById - when lecture does not exist, then return null`() {
         // given
         val lectureId = Random.nextLong()
@@ -38,7 +38,7 @@ class LectureRepositoryImplIntegrationTest(
     }
 
     @Test
-    @DisplayName("When lecture exists, then return lecture")
+    @DisplayName("특강이 존재하면, 특강을 반환한다")
     fun `findById - when lecture exists, then return lecture`() {
         // given
         val teacher = teacherJpaRepository.save(
@@ -47,14 +47,7 @@ class LectureRepositoryImplIntegrationTest(
                 name = "Teacher Name"
             )
         )
-        val lecture = lectureJpaRepository.save(
-            LectureEntity(
-                id = 0,
-                title = "Lecture Title",
-                teacherId = teacher.id,
-                dateUtc = Instant.now()
-            )
-        )
+        val lecture = lectureJpaRepository.save(StubObject.generateLectureEntity(teacher.id))
 
         // when
         val actual = lectureRepository.findById(lecture.id)
@@ -65,7 +58,7 @@ class LectureRepositoryImplIntegrationTest(
     }
 
     @Test
-    @DisplayName("When no lectures exist, then return empty list")
+    @DisplayName("특강이 존재하지 않으면, 빈 리스트를 반환한다")
     fun `findAll - when no lectures exist, then return empty list`() {
         // when
         val actual = lectureRepository.findAllByInDate(Instant.now())
@@ -75,7 +68,7 @@ class LectureRepositoryImplIntegrationTest(
     }
 
     @Test
-    @DisplayName("When lectures exist, then return list of lectures")
+    @DisplayName("특강이 존재하면, 특강 리스트를 반환한다")
     fun `findAll - when lectures exist, then return list of lectures`() {
         // given
         val teacher = teacherJpaRepository.save(
@@ -84,14 +77,7 @@ class LectureRepositoryImplIntegrationTest(
                 name = "Teacher Name"
             )
         )
-        val lecture = lectureJpaRepository.save(
-            LectureEntity(
-                id = 0,
-                title = "Lecture Title",
-                teacherId = teacher.id,
-                dateUtc = Instant.now()
-            )
-        )
+        val lecture = lectureJpaRepository.save(StubObject.generateLectureEntity(teacher.id))
 
         // when
         val actual = lectureRepository.findAllByInDate(Instant.now())

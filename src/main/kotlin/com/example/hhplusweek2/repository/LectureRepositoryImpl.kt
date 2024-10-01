@@ -5,6 +5,7 @@ import com.example.hhplusweek2.domain.model.Lecture
 import com.example.hhplusweek2.repository.jpa.LectureEnrollmentsJpaRepository
 import com.example.hhplusweek2.repository.jpa.LectureJpaRepository
 import com.example.hhplusweek2.repository.jpa.TeacherJpaRepository
+import com.example.hhplusweek2.repository.model.LectureEntity
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.time.ZoneOffset
@@ -15,6 +16,17 @@ class LectureRepositoryImpl(
     private val teacherJpaRepository: TeacherJpaRepository,
     private val lectureEnrollmentsJpaRepository: LectureEnrollmentsJpaRepository
 ) : LectureRepository {
+    override fun save(lecture: Lecture) {
+        val entity = LectureEntity(lecture)
+        lectureJpaRepository.save(entity)
+    }
+
+    override fun getById(lectureId: Long): Lecture {
+        val lectureEntity = lectureJpaRepository.findById(lectureId).get()
+        val teacherEntity = teacherJpaRepository.findById(lectureEntity.teacherId).get()
+        return lectureEntity.toModel(teacherEntity.toModel())
+    }
+
     override fun findById(lectureId: Long): Lecture? {
         val lectureEntity = lectureJpaRepository.findById(lectureId).orElse(null) ?: return null
         val teacherEntity = teacherJpaRepository.findById(lectureEntity.teacherId).get()

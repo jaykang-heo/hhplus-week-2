@@ -4,9 +4,11 @@ import com.example.hhplusweek2.domain.command.EnrollUserLectureCommand
 import com.example.hhplusweek2.repository.jpa.LectureEnrollmentsJpaRepository
 import com.example.hhplusweek2.repository.jpa.LectureJpaRepository
 import com.example.hhplusweek2.repository.model.LectureEnrollmentEntity
-import com.example.hhplusweek2.repository.model.LectureEntity
+import com.example.hhplusweek2.stub.StubObject
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
@@ -23,19 +25,13 @@ class LectureEnrollmentRepositoryImplIntegrationTest(
 ) {
 
     @Test
-    @DisplayName("When saving lecture enrollment, then succeed")
+    @DisplayName("특강 신청을 저장할 때, 성공한다")
     fun `save - when saving lecture enrollment, then succeed`() {
         // given
         val userId = Random.nextLong()
         val lectureId = Random.nextLong()
-        lectureJpaRepository.save(
-            LectureEntity(
-                id = lectureId,
-                title = "Lecture Title",
-                teacherId = Random.nextLong(),
-                dateUtc = Instant.now()
-            )
-        )
+        val teacherId = Random.nextLong()
+        lectureJpaRepository.save(StubObject.generateLectureEntity(teacherId))
         val command = EnrollUserLectureCommand(userId, lectureId)
 
         // when
@@ -48,19 +44,14 @@ class LectureEnrollmentRepositoryImplIntegrationTest(
     }
 
     @Test
-    @DisplayName("When finding enrollments by lecture ID, then return enrollments")
+    @DisplayName("특강 ID로 신청 내역을 찾을 때, 신청 내역을 반환한다")
     fun `findAllByLectureId - when finding by existing lecture ID, then return enrollments`() {
         // given
         val userId = Random.nextLong()
         val lectureId = Random.nextLong()
-        lectureJpaRepository.save(
-            LectureEntity(
-                id = lectureId,
-                title = "Lecture Title",
-                teacherId = Random.nextLong(),
-                dateUtc = Instant.now()
-            )
-        )
+        val teacherId = Random.nextLong()
+        val lectureEntity = StubObject.generateLectureEntity(teacherId)
+        lectureJpaRepository.save(lectureEntity)
         val enrollment = lectureEnrollmentsJpaRepository.save(
             LectureEnrollmentEntity(
                 id = 0,
@@ -79,7 +70,7 @@ class LectureEnrollmentRepositoryImplIntegrationTest(
     }
 
     @Test
-    @DisplayName("When finding enrollments by non-existing lecture ID, then return empty list")
+    @DisplayName("존재하지 않는 특강 ID로 신청 내역을 찾을 때, 빈 리스트를 반환한다")
     fun `findAllByLectureId - when lecture ID does not exist, then return empty list`() {
         // given
         val lectureId = Random.nextLong()

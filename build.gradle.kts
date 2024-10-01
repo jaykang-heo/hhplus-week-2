@@ -30,6 +30,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
