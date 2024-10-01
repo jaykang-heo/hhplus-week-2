@@ -1,6 +1,7 @@
 package com.example.hhplusweek2.domain
 
 import com.example.hhplusweek2.domain.command.EnrollUserLectureCommand
+import com.example.hhplusweek2.domain.`interface`.LectureEnrollmentRepository
 import com.example.hhplusweek2.domain.`interface`.LectureRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
@@ -12,7 +13,8 @@ import kotlin.test.Test
 class EnrollUserLectureCommandValidatorServiceTest {
 
     private val lectureRepository = mock(LectureRepository::class.java)
-    private val sut = EnrollUserLectureCommandValidatorService(lectureRepository)
+    private val lectureEnrollmentRepository = mock(LectureEnrollmentRepository::class.java)
+    private val sut = EnrollUserLectureCommandValidatorService(lectureRepository, lectureEnrollmentRepository)
 
     @Test
     @DisplayName("특강이 존재하지 않으면 에러를 반환한다")

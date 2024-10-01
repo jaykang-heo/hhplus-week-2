@@ -1,12 +1,14 @@
 package com.example.hhplusweek2.domain
 
 import com.example.hhplusweek2.domain.command.EnrollUserLectureCommand
+import com.example.hhplusweek2.domain.`interface`.LectureEnrollmentRepository
 import com.example.hhplusweek2.domain.`interface`.LectureRepository
 import org.springframework.stereotype.Service
 
 @Service
 class EnrollUserLectureCommandValidatorService(
-    private val lectureRepository: LectureRepository
+    private val lectureRepository: LectureRepository,
+    private val lectureEnrollmentRepository: LectureEnrollmentRepository
 ) {
     fun validate(command: EnrollUserLectureCommand) {
         val lecture = lectureRepository.findByIdWithLock(command.lectureId)
@@ -14,6 +16,10 @@ class EnrollUserLectureCommandValidatorService(
 
         if (lecture.registeredCount >= MAXIMUM_ENROLL_COUNT) {
             throw RuntimeException("Lecture enrollment exceeded maximum limit $MAXIMUM_ENROLL_COUNT of ${command.lectureId}")
+        }
+
+        if (lectureEnrollmentRepository.findByLectureIdAndUserId(command.lectureId, command.userId) != null) {
+            throw RuntimeException("${command.userId} is already enrolled in $command.lectureId")
         }
     }
 

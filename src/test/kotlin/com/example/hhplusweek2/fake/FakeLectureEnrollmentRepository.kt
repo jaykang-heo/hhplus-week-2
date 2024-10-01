@@ -9,4 +9,8 @@ class FakeLectureEnrollmentRepository : LectureEnrollmentRepository {
     override fun findAllByLectureId(lectureId: Long): List<LectureEnrollment> {
         return emptyList()
     }
+
+    override fun findByLectureIdAndUserId(lectureId: Long, userId: Long): LectureEnrollment? {
+        return null
+    }
 }

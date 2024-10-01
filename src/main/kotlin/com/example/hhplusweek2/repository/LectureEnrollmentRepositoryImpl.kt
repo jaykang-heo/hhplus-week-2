@@ -19,4 +19,8 @@ class LectureEnrollmentRepositoryImpl(
     override fun findAllByLectureId(lectureId: Long): List<LectureEnrollment> {
         return lectureEnrollmentsJpaRepository.findAllByLectureId(lectureId).map { it.toModel() }
     }
+
+    override fun findByLectureIdAndUserId(lectureId: Long, userId: Long): LectureEnrollment? {
+        return lectureEnrollmentsJpaRepository.findByUserIdAndLectureId(userId, lectureId)?.toModel()
+    }
 }
