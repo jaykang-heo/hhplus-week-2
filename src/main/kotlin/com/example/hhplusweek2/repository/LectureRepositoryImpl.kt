@@ -27,7 +27,7 @@ class LectureRepositoryImpl(
         return lectureEntity.toModel(teacherEntity.toModel())
     }
 
-    override fun findById(lectureId: Long): Lecture? {
+    override fun findByIdWithLock(lectureId: Long): Lecture? {
         val lectureEntity = lectureJpaRepository.findById(lectureId).orElse(null) ?: return null
         val teacherEntity = teacherJpaRepository.findById(lectureEntity.teacherId).get()
         return lectureEntity.toModel(teacherEntity.toModel())

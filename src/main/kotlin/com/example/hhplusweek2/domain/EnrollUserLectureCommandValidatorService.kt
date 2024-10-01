@@ -9,7 +9,7 @@ class EnrollUserLectureCommandValidatorService(
     private val lectureRepository: LectureRepository
 ) {
     fun validate(command: EnrollUserLectureCommand) {
-        val lecture = lectureRepository.findById(command.lectureId)
+        val lecture = lectureRepository.findByIdWithLock(command.lectureId)
             ?: throw RuntimeException("Cannot enroll lecture ${command.lectureId}. ${command.lectureId} does not exist")
 
         if (lecture.registeredCount >= MAXIMUM_ENROLL_COUNT) {

@@ -20,7 +20,7 @@ class EnrollUserLectureCommandValidatorServiceTest {
         // given
         val userId = Random.nextLong(1, Long.MAX_VALUE)
         val lectureId = Random.nextLong()
-        `when`(lectureRepository.findById(lectureId)).thenReturn(null)
+        `when`(lectureRepository.findByIdWithLock(lectureId)).thenReturn(null)
         val command = EnrollUserLectureCommand(userId, lectureId)
 
         // when, then

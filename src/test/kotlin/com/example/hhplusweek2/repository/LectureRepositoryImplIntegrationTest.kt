@@ -31,7 +31,7 @@ class LectureRepositoryImplIntegrationTest(
         val lectureId = Random.nextLong()
 
         // when
-        val actual = lectureRepository.findById(lectureId)
+        val actual = lectureRepository.findByIdWithLock(lectureId)
 
         // then
         assertThat(actual).isNull()
@@ -50,7 +50,7 @@ class LectureRepositoryImplIntegrationTest(
         val lecture = lectureJpaRepository.save(StubObject.generateLectureEntity(teacher.id))
 
         // when
-        val actual = lectureRepository.findById(lecture.id)
+        val actual = lectureRepository.findByIdWithLock(lecture.id)
 
         // then
         val expected = lecture.toModel(teacher.toModel())

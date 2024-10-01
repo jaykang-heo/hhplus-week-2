@@ -12,7 +12,7 @@ class FakeLectureRepository : LectureRepository {
         TODO()
     }
 
-    override fun findById(lectureId: Long): Lecture? {
+    override fun findByIdWithLock(lectureId: Long): Lecture? {
         return null
     }
 
