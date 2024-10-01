@@ -39,7 +39,7 @@ class LectureRepositoryImplTest {
     fun `findById-when lecture exists, then return lecture`() {
         // given
         val lectureId = Random.nextLong()
-        val lecture = LectureEntity(lectureId, UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        val lecture = LectureEntity(lectureId, UUID.randomUUID().toString(), UUID.randomUUID().toString(), 0)
         `when`(lectureJpaRepository.findById(lectureId)).thenReturn(Optional.of(lecture))
 
         // when
@@ -72,7 +72,7 @@ class LectureRepositoryImplTest {
         val userId = Random.nextLong()
         val lectureId = Random.nextLong()
         val lectureEnrollmentEntity = LectureEnrollmentEntity(0, userId, lectureId, Instant.now())
-        val lecture = LectureEntity(0, UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        val lecture = LectureEntity(0, UUID.randomUUID().toString(), UUID.randomUUID().toString(), 0)
         `when`(lectureEnrollmentsJpaRepository.findByUserId(userId)).thenReturn(listOf(lectureEnrollmentEntity))
         `when`(lectureJpaRepository.findAllById(listOf(lectureEnrollmentEntity.lectureId))).thenReturn(listOf(lecture))
 
@@ -100,7 +100,7 @@ class LectureRepositoryImplTest {
     @DisplayName("특강이 존재하면, 모든 강의를 반환한다")
     fun `findAll-when lecture exists, then return list of lectures`() {
         // given
-        val lectureEntity = LectureEntity(0, UUID.randomUUID().toString(), UUID.randomUUID().toString())
+        val lectureEntity = LectureEntity(0, UUID.randomUUID().toString(), UUID.randomUUID().toString(), 0)
         `when`(lectureJpaRepository.findAll()).thenReturn(listOf(lectureEntity))
 
         // when
