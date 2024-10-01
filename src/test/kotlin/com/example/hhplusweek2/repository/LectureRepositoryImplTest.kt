@@ -28,7 +28,7 @@ class LectureRepositoryImplTest {
         `when`(lectureJpaRepository.findById(lectureId)).thenReturn(Optional.empty())
 
         // when
-        val actual = sut.findById(lectureId)
+        val actual = sut.findByIdWithLock(lectureId)
 
         // then
         assertThat(actual).isNull()
@@ -43,7 +43,7 @@ class LectureRepositoryImplTest {
         `when`(lectureJpaRepository.findById(lectureId)).thenReturn(Optional.of(lecture))
 
         // when
-        val actual = sut.findById(lectureId)
+        val actual = sut.findByIdWithLock(lectureId)
 
         // then
         val expected = lecture.toModel()
