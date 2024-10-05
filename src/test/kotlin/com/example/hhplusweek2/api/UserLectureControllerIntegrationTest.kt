@@ -15,6 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -148,5 +149,42 @@ class UserLectureControllerIntegrationTest(
         val actualRegisteredCount = lectureJpaRepository.findById(lectureId).get().registeredCount
         assertThat(actualEnrollments).hasSize(30)
         assertThat(actualRegisteredCount).isEqualTo(30)
+    }
+
+    @Test
+    @DisplayName("동시에 동일한 유저가 특강에 5번 신청하면, 1번만 성공한다")
+    fun `when same user try to enroll in same lecture 5 times, then only enroll once`() {
+        // given
+        val teacherEntity = StubObject.generateTeacherEntity()
+        val teacherId = teacherJpaRepository.save(teacherEntity).id
+        val lectureEntity = StubObject.generateLectureEntity(teacherId)
+        val lectureId = lectureJpaRepository.save(lectureEntity).id
+        val userId = Random.nextLong(1, Long.MAX_VALUE)
+        val request = EnrollUserLectureRequest(userId, lectureId)
+        val latch = CountDownLatch(5)
+
+        // when
+        val futures = (1..5).map {
+            CompletableFuture.runAsync {
+                try {
+                    webTestClient.post()
+                        .uri("/lectures/enroll")
+                        .bodyValue(request)
+                        .exchange()
+                        .expectStatus()
+                } catch (_: Exception) {
+                } finally {
+                    latch.countDown()
+                }
+            }
+        }
+        latch.await(10, TimeUnit.SECONDS)
+
+        // then
+        CompletableFuture.allOf(*futures.toTypedArray()).join()
+        val actualEnrollments = lectureEnrollmentRepository.findAllByLectureId(lectureId)
+        val actualRegisteredCount = lectureJpaRepository.findById(lectureId).get().registeredCount
+        assertThat(actualEnrollments).hasSize(1)
+        assertThat(actualRegisteredCount).isEqualTo(1)
     }
 }

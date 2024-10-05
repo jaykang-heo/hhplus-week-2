@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface LectureEnrollmentsJpaRepository : JpaRepository<LectureEnrollmentEntity, Long> {
     fun findByUserId(userId: Long): List<LectureEnrollmentEntity>
     fun findAllByLectureId(lectureId: Long): List<LectureEnrollmentEntity>
+    fun findByUserIdAndLectureId(userId: Long, lectureId: Long): LectureEnrollmentEntity?
 }
